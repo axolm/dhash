@@ -1,0 +1,56 @@
+---
+Language:        Cpp
+BasedOnStyle:  Chromium
+AccessModifierOffset: -2
+AlignConsecutiveBitFields: false
+AlignEscapedNewlines: DontAlign
+AlignOperands:   DontAlign
+AlignTrailingComments: false
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: None
+AllowShortLambdasOnASingleLine: Inline
+BinPackArguments: false
+BreakBeforeTernaryOperators: false
+BreakConstructorInitializers: AfterColon
+ColumnLimit:     120
+DeriveLineEnding: false
+IncludeCategories:
+  - Regex:           '^"[^/]*"$'
+    Priority:        1
+    SortPriority:    0
+  - Regex:           '".*/.*"'
+    Priority:        2
+    SortPriority:    0
+  - Regex:           '^<.*\.(h|hpp)>'
+    Priority:        4
+    SortPriority:    0
+  - Regex:           '^<.*'
+    Priority:        5
+    SortPriority:    0
+IndentCaseBlocks: false
+IndentExternBlock: AfterExternBlock
+InsertTrailingCommas: Wrapped
+MaxEmptyLinesToKeep: 2
+PenaltyBreakFirstLessLess: 0
+PenaltyExcessCharacter: 4000
+RawStringFormats:
+  - Language:        TextProto
+    EnclosingFunctions:
+      - EqualsProto
+      - EquivToProto
+      - PARSE_PARTIAL_TEXT_PROTO
+      - PARSE_TEST_PROTO
+      - PARSE_TEXT_PROTO
+      - ParseTextOrDie
+      - ParseTextProtoOrDie
+      - ParseTestProto
+      - ParsePartialTestProto
+SpaceAfterCStyleCast: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeCtorInitializerColon: false
+SpacesInContainerLiterals: false
+Standard:        Latest
+WhitespaceSensitiveMacros:
+  - STRINGIFY
+  - QUOTE
