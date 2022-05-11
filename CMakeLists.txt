@@ -1,24 +1,23 @@
+cmake_minimum_required(VERSION 3.5)
+include(cmake/common.cmake)
+
 project(twab)
 
-cmake_minimum_required(VERSION 3.5)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(CMAKE_CXX_STANDARD 20) # TODO: support C++14
+set(CONAN_INSTALL_DIR ${CMAKE_BINARY_DIR}/conan)
+file(MAKE_DIRECTORY ${CONAN_INSTALL_DIR})
+execute_process(
+    COMMAND conan install "--build=missing" ${TWAB_ROOT}/conan/conanfile.txt
+    # COMMAND conan install "--build=missing" --profile=${TWAB_ROOT}/conan/clang-libstdcpp.conf ${TWAB_ROOT}/conan/conanfile.txt
+    COMMAND_ECHO STDOUT
+    WORKING_DIRECTORY ${CONAN_INSTALL_DIR}
+)
+include(${CONAN_INSTALL_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+message("conan libs: ${CONAN_LIBS}")
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}")
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-    set (COMPILER_CLANG 1)
-endif()
-
-
-add_compile_options("-g")
-add_compile_options("-Wall" "-Wextra" "-Wpedantic" "-Werror")
-
-if (COMPILER_CLANG)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-endif()
+find_package(OpenSSL REQUIRED)
 
 include_directories(include)
-
+add_subdirectory(src)
 add_subdirectory(tests)
