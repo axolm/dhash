@@ -109,17 +109,17 @@ TEST_CASE("CustomXorHashAlgorithm") {
   }
 }
 
+auto digest_to_hex_str = [](const auto& digest) {
+  std::stringstream ss;
+  ss << std::hex << std::setfill('0');
+  for (auto ch : digest) {
+    ss << std::setw(2) << int(ch);
+  }
+  return std::move(ss).str();
+};
 
-TEST_CASE("Sha512Algorithm") {
-  auto digest_to_hex_str = [](const auto& digest) {
-    std::stringstream ss;
-    ss << std::hex << std::setfill('0');
-    for (auto ch : digest) {
-      ss << std::setw(2) << int(ch);
-    }
-    return std::move(ss).str();
-  };
 
+TEST_CASE("Sha512AlgorithmCorrectness") {
   {
     dhash::hasher hasher(dhash::algorithms::sha512{});
     hasher("abacaba");
@@ -127,7 +127,9 @@ TEST_CASE("Sha512Algorithm") {
             "224efa649e799be3bc7f8fe49955380a2416cc423ed14d7fb2393bb7695c6fb6"
             "35bd83727ddbaf23ed59ae0a82b1528a0eb703204c0f0d38814243bfba4b9f18");
   }
+}
 
+TEST_CASE("HasherOptions") {
   dhash::hasher hasher(dhash::algorithms::sha512{},
                        dhash::hasher_options::hash_integer_as_bytes<std::endian::native>,
                        dhash::hasher_options::hash_range_as_items);
