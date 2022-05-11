@@ -14,8 +14,8 @@
 #include <ranges>
 
 
-namespace twab::hash {
-struct use_pfr {};
+namespace dhash {
+struct default_hash {};
 
 // TODO: separate files
 
@@ -58,7 +58,7 @@ public:
   void operator()(Data&& data) {
     if constexpr (requires { hash_algorithm_.append(std::forward<Data>(data)); }) {
       hash_algorithm_.append(std::forward<Data>(data));
-    } else if constexpr (requires { requires std::same_as<typename std::decay_t<Data>::hash, use_pfr>; }) {
+    } else if constexpr (requires { requires std::same_as<typename std::decay_t<Data>::hash, default_hash>; }) {
       boost::pfr::for_each_field(std::forward<Data>(data), [this](auto& field) { operator()(field); });
     } else if constexpr (requires { std::forward<Data>(data).hash(*this); }) {  // TODO: else if free func
       std::forward<Data>(data).hash(*this);
@@ -130,6 +130,7 @@ private:
 namespace algorithms {
 class sha512 {
 public:
+  // TODO: separate class `digest` with conversion to hex methods ?
   using result_t = std::array<unsigned char, SHA512_DIGEST_LENGTH>;
 
   void append(std::string_view bytes) {
@@ -162,7 +163,7 @@ struct hash_integers_as_bytes_t {
     if constexpr (endian == std::endian::native) {
       hasher(std::string_view{reinterpret_cast<const char*>(&i), sizeof(i)});
     } else {
-      static_assert(::twab::hash::__impl::false_v<Hasher>, "TODO: support other endians");
+      static_assert(::dhash::__impl::false_v<Hasher>, "TODO: support other endians");
     }
   }
 };
@@ -183,6 +184,8 @@ constexpr inline __impl::hash_integers_as_bytes_t<endian> hash_integers_as_bytes
 
 constexpr inline __impl::hash_range_as_items_t hash_range_as_items{};
 
+// TODO: other options
+
 };  // namespace hasher_options
 
-}  // namespace twab::hash
+}  // namespace dhash

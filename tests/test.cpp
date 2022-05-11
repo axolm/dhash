@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#include <twab/twab.hpp>
+#include <dhash/dhash.hpp>
 using namespace std;
 
 // TODO: separate files, catch2
@@ -19,7 +19,7 @@ struct MyStruct2 {
   int x;
   std::string s;
 
-  using hash = twab::hash::use_pfr;
+  using hash = dhash::default_hash;
 };
 
 struct MyStruct3 : public MyStruct {
@@ -36,7 +36,7 @@ struct OnlyUints {
   uint64_t x1;
   uint64_t x2;
 
-  using hash = twab::hash::use_pfr;
+  using hash = dhash::default_hash;
 };
 
 struct MyStruct4 {
@@ -44,7 +44,7 @@ struct MyStruct4 {
   uint64_t x2;
   std::string s;
 
-  using hash = twab::hash::use_pfr;
+  using hash = dhash::default_hash;
   bool operator==(const MyStruct4& rhs) const = default;
 };
 
@@ -52,7 +52,7 @@ namespace std {
 template<typename T>
 requires(!requires { std::hash<T>{}; }) struct hash<T> {
   size_t operator()(const T& data) const {
-    twab::hash::hasher hasher(twab::hash::boost_hash_algorithm{});
+    dhash::hasher hasher(dhash::boost_hash_algorithm{});
     hasher(data);
     return std::move(hasher).result();
   }
@@ -66,20 +66,20 @@ int main() {
 
 
   OnlyUints uints{.x1 = 228, .x2 = 231};
-  auto xor_hash_result = twab::hash::xor_hash(uints);
+  auto xor_hash_result = dhash::xor_hash(uints);
   std::cout << "xor hash #1: " << xor_hash_result << '\n';
 
   {
     OnlyUints more_uints{.x1 = 10, .x2 = 18};
-    auto xor_hash_algorithm = twab::hash::xor_hash_algorithm::from_previous_result(xor_hash_result);
-    twab::hash::hasher hasher(std::move(xor_hash_algorithm));
+    auto xor_hash_algorithm = dhash::xor_hash_algorithm::from_previous_result(xor_hash_result);
+    dhash::hasher hasher(std::move(xor_hash_algorithm));
     hasher(more_uints);
     std::cout << "xor hash #2: " << std::move(hasher).result() << '\n';
   }
 
 
   {
-    twab::hash::hasher hasher(twab::hash::boost_hash_algorithm{});
+    dhash::hasher hasher(dhash::boost_hash_algorithm{});
     hasher(uints);
     std::cout << "boost hash: " << std::move(hasher).result() << '\n';
   }
@@ -95,9 +95,9 @@ int main() {
   // 2. stl containers
 
   {
-    twab::hash::hasher hasher(twab::hash::algorithms::sha512{},
-                              twab::hash::hasher_options::hash_integers_as_bytes<std::endian::native>,
-                              twab::hash::hasher_options::hash_range_as_items);
+    dhash::hasher hasher(dhash::algorithms::sha512{},
+                         dhash::hasher_options::hash_integers_as_bytes<std::endian::native>,
+                         dhash::hasher_options::hash_range_as_items);
     std::string_view sv = "abacaba";
     hasher(sv);
     hasher(uints);
@@ -113,13 +113,6 @@ int main() {
     std::cout << std::endl;
     // TODO: stream in test
   }
-
-  // std::cout << twab::hash::md5(m1) << '\n';
-  // std::cout << "---\n";
-  // std::cout << twab::hash::md5(m2) << '\n';
-  // std::cout << "---\n";
-  // std::cout << twab::hash::md5(m3) << '\n';
-  // std::cout << "---\n";
 
   return 0;
 }

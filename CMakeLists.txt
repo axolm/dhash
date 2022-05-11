@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 include(cmake/common.cmake)
 
-project(twab)
+project(dhash)
 
 
 set(CONAN_INSTALL_DIR ${CMAKE_BINARY_DIR}/conan)
 file(MAKE_DIRECTORY ${CONAN_INSTALL_DIR})
 execute_process(
-    COMMAND conan install "--build=missing" ${TWAB_ROOT}/conan/conanfile.txt
-    # COMMAND conan install "--build=missing" --profile=${TWAB_ROOT}/conan/clang-libstdcpp.conf ${TWAB_ROOT}/conan/conanfile.txt
+    COMMAND conan install "--build=missing" ${DHASH_ROOT}/conan/conanfile.txt
+    # COMMAND conan install "--build=missing" --profile=${DHASH_ROOT}/conan/clang-libstdcpp.conf ${DHASH_ROOT}/conan/conanfile.txt
     COMMAND_ECHO STDOUT
     WORKING_DIRECTORY ${CONAN_INSTALL_DIR}
 )
