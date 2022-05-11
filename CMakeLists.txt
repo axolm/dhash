@@ -16,7 +16,9 @@ include(${CONAN_INSTALL_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 message("conan libs: ${CONAN_LIBS}")
 
-find_package(OpenSSL REQUIRED)
+# find_package(Boost REQUIRED)
+# find_package(OpenSSL REQUIRED)
+# find_package(Catch2 REQUIRED)
 
 include_directories(include)
 add_subdirectory(src)
